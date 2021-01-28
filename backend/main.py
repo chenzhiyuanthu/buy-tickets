@@ -6,7 +6,7 @@ import os
 
 if __name__ == "__main__":
     settings = {
-            "cookie_secret": base64.b64encode(os.urandom(50)).decode('ascii')
+        "cookie_secret": base64.b64encode(os.urandom(50)).decode('ascii')
     }
     application = tornado.web.Application({
         (r"/", MainHandler),
