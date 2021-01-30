@@ -30,6 +30,6 @@
   - `cd frontend`
   - `npm install`
   - `npm start` 或者 `ng serve`(需要先安装angular/cli `npm install -g @angular/cli`)
-  - 浏览器打开 localhost:4200
+  - 浏览器打开 http://localhost:4200
 
 
