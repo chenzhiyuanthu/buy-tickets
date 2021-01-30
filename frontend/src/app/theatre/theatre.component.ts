@@ -108,7 +108,7 @@ export class TheatreComponent implements OnInit {
     let r =
       this.r / 2 +
       ((this.r / 2) * row) / rows +
-      this.yAxis.transformToPixel(0.15);
+      this.yAxis.transformToPixel(0.4);
     let startPosition = [
       this.cx - r * Math.cos(startAngle),
       this.cy - r * Math.sin(startAngle),

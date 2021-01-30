@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { AREAS, MAX_ROW, MAX_TICKETS, MIN_ROW, OFFSET } from '../configs';
 import { Request } from './models';
 
@@ -18,11 +19,12 @@ export class ConsumerService {
     this.areaSeats = ((MIN_ROW + MAX_ROW) * this.rows) / 2;
     this.totalSeats = this.areaSeats * AREAS;
   }
+  ended: Subject<boolean> = new Subject<boolean>();
 
   handleBuyRequest(r: Request) {
     // 1. check toBeSelected
     let cnt = r.cnt;
-    let res = [];
+    let res: any = [];
     if (cnt in this.toBeSelected) {
       // 有空缺满足
       let tmp = this.toBeSelected[cnt];
@@ -73,7 +75,7 @@ export class ConsumerService {
       if (tmp.length == 0) {
         delete this.toBeSelected[cnt];
       }
-      this.candidates.splice(this.candidates.indexOf(res[0], r.cnt));
+      this.candidates.splice(this.candidates.indexOf(res[0]), r.cnt);
     } else if (this.totalSeats - this.selectedCntRaw >= r.cnt) {
       // 顺序选择后面的座位
       let startInfo = this.getSeatDetail(this.pointer);
@@ -126,10 +128,36 @@ export class ConsumerService {
       }
     } else {
       // 没地方选了 TODO
-      //debugger;
+      //console.log(this.candidates.length);
+      //console.log(this.toBeSelected);
+      this.candidates.sort();
+      if (this.candidates.length == 0) {
+        this.ended.next();
+      } else if (this.candidates.length >= cnt) {
+        let found = true;
+        for (var i = 0; i < this.candidates.length - cnt + 1; i++) {
+          let detail0 = this.getSeatDetail(this.candidates[i]);
+          found = true;
+          for (var j = 1; j < cnt; j++) {
+            let detail = this.getSeatDetail(this.candidates[i + j]);
+            if (
+              detail[0] == detail0[0] &&
+              Math.abs(detail[1] - detail0[1]) <= 1
+            ) {
+              detail0 = detail;
+            } else {
+              found = false;
+            }
+          }
+          if (found) break;
+        }
+        if (found) {
+          res = [].concat(...this.candidates.splice(i, cnt));
+        }
+      }
     }
 
-    return res.map((n) => this.getSeatDetail(n));
+    return res.map((n: any) => this.getSeatDetail(n));
   }
 
   getSeatDetail(n: number) {
