@@ -25,5 +25,11 @@
     - 4. 若没有完美匹配的空缺则继续在当前购票队伍之后进行购票
     - 5. 若场馆中再无完美匹配的空缺，则寻找同区跨排座位
     - 6. 若以上条件皆不满足则不受理该次购票请求
+    
+## RUN
+  - `cd frontend`
+  - `npm install`
+  - `npm start` 或者 `ng serve`(需要先安装angular/cli `npm install -g @angular/cli`)
+  - 浏览器打开 localhost:4200
 
 
